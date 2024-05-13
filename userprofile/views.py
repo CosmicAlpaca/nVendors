@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.text import slugify
-
+from .models import SignUpForm
 from .models import Userprofile
 
 from store.forms import ProductForm
@@ -100,22 +100,19 @@ def myaccount(request):
 
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
 
         if form.is_valid():
             user = form.save()
 
             login(request, user)
 
-            userprofile = Userprofile.objects.create(user=user)
-
-            return redirect('frontpage')
+            return redirect('/')
     else:
-        form = UserCreationForm()
-    
-    return render(request, 'userprofile/signup.html', {
-        'form': form
-    })
+        form = SignUpForm()
+
+    return render(request, 'userprofile/signup.html', {'form': form})
+
 @login_required
 def edit_myaccount(request):
     if request.method == 'POST':
